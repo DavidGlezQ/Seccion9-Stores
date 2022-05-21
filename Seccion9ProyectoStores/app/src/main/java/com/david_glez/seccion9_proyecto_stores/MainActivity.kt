@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.david_glez.seccion9_proyecto_stores.Adapters.StoreAdapter
 import com.david_glez.seccion9_proyecto_stores.Entities.StoreEntity
+import com.david_glez.seccion9_proyecto_stores.Fragments.EditStoreFragment
 import com.david_glez.seccion9_proyecto_stores.Interfaces.OnClickListener
 import com.david_glez.seccion9_proyecto_stores.databinding.ActivityMainBinding
 import org.jetbrains.anko.doAsync
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
-        mBinding.btnSave.setOnClickListener {
+        /*mBinding.btnSave.setOnClickListener {
             val store = StoreEntity(name = mBinding.etName.text.toString().trim()) // Argumentos nombrados
 
             Thread{
@@ -29,9 +30,25 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             }.start()
 
             mAdapter.add(store)
+        }*/
+
+        mBinding.fabAddStore.setOnClickListener {
+            launchEditFragment()
         }
 
         setupRecyclerView()
+    }
+
+    private fun launchEditFragment() {
+        val fragment = EditStoreFragment()
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+        fragmentTransaction.add(R.id.containerMain, fragment)
+        fragmentTransaction.addToBackStack(null) // Destruir el fragment del stack
+        fragmentTransaction.commit()
+
+        mBinding.fabAddStore.hide()
     }
 
     private fun setupRecyclerView() {
