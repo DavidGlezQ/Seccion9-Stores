@@ -1,7 +1,0 @@
-package com.david_glez.seccion9_proyecto_stores
-
-data class Store(var id: Long = 0,
-                 var name: String,
-                 var phone: String = "",
-                 var webSite: String = "",
-                 var isFavorite: Boolean = false)
