@@ -10,4 +10,8 @@
     <string name="hint_website">Url del sitio web</string>
     <string name="photo_url">Url de la imagen</string>
     <string name="edit_store_title_add">Crear tienda</string>
+    <string name="menu_save">Save</string>
+    <string name="edit_store_message_save_success">Tienda creada correctamente</string>
+    <string name="arg_id">arg_id</string>
+    <string name="edit_store_message_update_success">Tienda Acualizada!</string>
 </resources>

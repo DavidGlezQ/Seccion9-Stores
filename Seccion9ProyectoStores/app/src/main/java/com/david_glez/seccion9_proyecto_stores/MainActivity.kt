@@ -1,18 +1,20 @@
 package com.david_glez.seccion9_proyecto_stores
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.david_glez.seccion9_proyecto_stores.Adapters.StoreAdapter
 import com.david_glez.seccion9_proyecto_stores.Entities.StoreEntity
 import com.david_glez.seccion9_proyecto_stores.Fragments.EditStoreFragment
+import com.david_glez.seccion9_proyecto_stores.Interfaces.MainAux
 import com.david_glez.seccion9_proyecto_stores.Interfaces.OnClickListener
 import com.david_glez.seccion9_proyecto_stores.databinding.ActivityMainBinding
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
-class MainActivity : AppCompatActivity(), OnClickListener {
+class MainActivity : AppCompatActivity(), OnClickListener, MainAux {
 
+    //Clase 132
     private lateinit var mBinding: ActivityMainBinding
     private lateinit var mAdapter: StoreAdapter
     private lateinit var mGridLayout: GridLayoutManager
@@ -39,8 +41,10 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         setupRecyclerView()
     }
 
-    private fun launchEditFragment() {
+    private fun launchEditFragment(args: Bundle? = null) {
         val fragment = EditStoreFragment()
+        if (args != null) fragment.arguments = args
+
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
@@ -48,7 +52,8 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         fragmentTransaction.addToBackStack(null) // Destruir el fragment del stack
         fragmentTransaction.commit()
 
-        mBinding.fabAddStore.hide()
+        hideFab()
+        //mBinding.fabAddStore.hide()
     }
 
     private fun setupRecyclerView() {
@@ -75,8 +80,11 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     /*
     * OnClickListener
     * */
-    override fun onClick(storeEntity: StoreEntity) {
+    override fun onClick(storeId: Long) {
+        val args = Bundle()
+        args.putLong(getString(R.string.arg_id), storeId)
 
+        launchEditFragment(args)
     }
 
     override fun onFavoriteStore(storeEntity: StoreEntity) {
@@ -96,6 +104,21 @@ class MainActivity : AppCompatActivity(), OnClickListener {
                 mAdapter.delete(storeEntity)
             }
         }
+    }
+
+    /*
+    * MainAux
+    * */
+    override fun hideFab(isVisible: Boolean) {
+        if (isVisible) mBinding.fabAddStore.show() else mBinding.fabAddStore.hide()
+    }
+
+    override fun addStore(storeEntity: StoreEntity) {
+        mAdapter.add(storeEntity)
+    }
+
+    override fun updateStore(storeEntity: StoreEntity) {
+        mAdapter.update(storeEntity)
     }
 
 }

@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.david_glez.seccion9_proyecto_stores.Entities.StoreEntity
 import com.david_glez.seccion9_proyecto_stores.Interfaces.OnClickListener
 import com.david_glez.seccion9_proyecto_stores.R
@@ -16,16 +18,17 @@ class StoreAdapter(private var stores: MutableList<StoreEntity>, private var lis
     private lateinit var mContext: Context // La 'm' se refiere a que es un miembro de la clase
 
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
-        val binding = ItemStoreBinding.bind(view) // Creamos en binding para el item
+        val mBinding = ItemStoreBinding.bind(view) // Creamos en binding para el item
 
         fun setListener(storeEntity: StoreEntity){
-            with(binding.root){
-                setOnClickListener { listener.onClick(storeEntity) }
-                setOnLongClickListener{ listener.onDeleteStore(storeEntity)
+            with(mBinding.root){
+                setOnClickListener { listener.onClick(storeEntity.id) }
+                setOnLongClickListener{
+                    listener.onDeleteStore(storeEntity)
                     true }
-                setOnClickListener {
-                    listener.onFavoriteStore(storeEntity)
-                }
+            }
+            mBinding.cbFavorite.setOnClickListener {
+                listener.onFavoriteStore(storeEntity)
             }
         }
     }
@@ -44,16 +47,23 @@ class StoreAdapter(private var stores: MutableList<StoreEntity>, private var lis
         with(holder){
             setListener(store)
 
-            binding.tvName.text = store.name
-            binding.cbFavorite.isChecked = store.isFavorite
+            mBinding.tvName.text = store.name
+            mBinding.cbFavorite.isChecked = store.isFavorite
+            Glide.with(mContext)
+                .load(mBinding.imgPhoto)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
+                .into(mBinding.imgPhoto)
         }
     }
 
     override fun getItemCount(): Int = stores.size
 
     fun add(storeEntity: StoreEntity) {
-        stores.add(storeEntity)
-        notifyDataSetChanged()
+        if (!stores.contains(storeEntity)){
+            stores.add(storeEntity)
+            notifyItemChanged(stores.size -1)
+        }
     }
 
     fun setStores(stores: MutableList<StoreEntity>){
