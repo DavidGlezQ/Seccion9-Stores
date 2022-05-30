@@ -50,7 +50,7 @@ class StoreAdapter(private var stores: MutableList<StoreEntity>, private var lis
             mBinding.tvName.text = store.name
             mBinding.cbFavorite.isChecked = store.isFavorite
             Glide.with(mContext)
-                .load(mBinding.imgPhoto)
+                .load(store.photoUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()
                 .into(mBinding.imgPhoto)
